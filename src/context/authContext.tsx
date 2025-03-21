@@ -1,19 +1,25 @@
 "use client";
 import { api } from "@/api";
 import { AxiosError } from "axios";
-import { createContext, useContext } from "react";
-import { setCookie } from "cookies-next";
+import { createContext, useContext, useEffect, useState } from "react";
+import { deleteCookie, setCookie } from "cookies-next";
 import { ILogin } from "@/interface/authentication";
 import { toast } from "react-toastify";
+import { usePathname, useRouter } from "next/navigation";
 
 type AuthContextType = {
   login: (login: ILogin) => Promise<boolean>;
   register: (register: ILogin) => Promise<boolean>;
+  userId: string;
 };
 export const AuthContext = createContext({} as AuthContextType);
 export const Auth = () => useContext(AuthContext);
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [userId, setUserId] = useState("");
+  const pathname = usePathname();
+  const router = useRouter();
+
   const login = async (login: ILogin) => {
     try {
       const { data } = await api.post("auth/login", login);
@@ -40,7 +46,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const register = async (register: ILogin) => {
     try {
       const { data } = await api.post("user/create", register);
-      setCookie("taskManager.token", data.token, {
+      setCookie("TaskManager.token", data.token, {
         expires: new Date(Date.now() + 86400000),
         path: "/",
       });
@@ -61,5 +67,23 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     }
   };
 
-  return <AuthContext.Provider value={{ login, register }}> {children} </AuthContext.Provider>;
+  const claimToken = async () => {
+    try {
+      const { data } = await api.get("auth/claim");
+      setUserId(data.id);
+    } catch (error) {
+      deleteCookie("TaskManager.token");
+      router.push("/login");
+    }
+  };
+
+  useEffect(() => {
+    if (pathname !== "/login" && pathname !== "/register") {
+      claimToken();
+    }
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ login, register, userId }}> {children} </AuthContext.Provider>
+  );
 }
