@@ -7,21 +7,19 @@ import { deleteTaskByid, getTaskByUser } from "@/api/task";
 import { Loading } from "./components/Loading";
 
 export default function Home() {
+  const { userId } = Auth();
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const { userId } = Auth();
 
   const getTasks = async (user_id: string) => {
     const data = await getTaskByUser(user_id);
-    const formatedTasks = data.map((task: ITask) => {
-      return {
-        title: task.title,
-        description: task.description,
-        status: task.status,
-        createdAt: new Intl.DateTimeFormat("pt-BR").format(new Date(task.createdAt)),
-        id: task.id,
-      };
-    });
+    const formatedTasks = data.map((task: ITask) => ({
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      createdAt: new Intl.DateTimeFormat("pt-BR").format(new Date(task.createdAt)),
+      id: task.id,
+    }));
     setTasks(formatedTasks);
     setLoading(false);
   };
@@ -29,7 +27,6 @@ export default function Home() {
   const deleteTask = async (id: string) => {
     try {
       await deleteTaskByid(id);
-
       getTasks(userId);
     } catch (error) {
       console.error(error);
@@ -41,6 +38,7 @@ export default function Home() {
       getTasks(userId);
     }
   }, [userId]);
+
   return (
     <div>
       {loading ? (

@@ -50,6 +50,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         expires: new Date(Date.now() + 86400000),
         path: "/",
       });
+      api.defaults.headers.Authorization = `Bearer ${data.token}`;
+      await claimToken();
       return true;
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -74,6 +76,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     } catch (error) {
       deleteCookie("TaskManager.token");
       router.push("/login");
+      console.error(error);
+      throw new Error("Erro de autenticação");
     }
   };
 

@@ -11,6 +11,9 @@ export const api = axios.create({
   baseURL: API_URL,
   headers: {
     Accept: "application/json",
-    Authorization: `Bearer ${token}`,
   },
 });
+
+if (token) {
+  api.defaults.headers.Authorization = `Bearer ${token}`;
+}
