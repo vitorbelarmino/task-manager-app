@@ -1,5 +1,4 @@
 "use client";
-import { taskBackground } from "@/assets";
 import { Auth } from "@/context/authContext";
 import { ILogin } from "@/interface/authentication";
 import { loginSchema } from "@/schema/IAuthenticationSchema";
@@ -8,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import * as Yup from "yup";
 import { Loading } from "../../components/Loading";
+import { Input } from "@/app/components/Input";
 
 export default function Login() {
   const { login } = Auth();
@@ -28,7 +28,6 @@ export default function Login() {
       if (loginSuccess) {
         router.push("/");
       }
-      setLoading(false);
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         setErrors(validateErrorsYup(error));
@@ -44,26 +43,22 @@ export default function Login() {
     <div className="flex flex-col justify-center items-center py-4">
       <h1 className="text-3xl">Login</h1>
       <div className="flex flex-col gap-0.5 min-w-[360px] w-full">
-        <label className={`${errors.email ? "pb-0" : "pb-6"}`}>
-          Email
-          <input
-            type="text"
-            name="email"
-            onChange={handleChange}
-            className={`${errors.email && "border-red-600"} border rounded p-1 pl-2 w-full`}
-          />
-          {errors.email && <p className="text-xs text-red-500 py-1">{errors.email}</p>}
-        </label>
-        <label className={`${errors.password ? "pb-0" : "pb-6"}`}>
-          Senha
-          <input
-            type="password"
-            name="password"
-            onChange={handleChange}
-            className={` ${errors.password && "border-red-600"} border rounded p-1 pl-2 w-full`}
-          />
-          {errors.password && <p className="text-xs text-red-500 py-1">{errors.password}</p>}
-        </label>
+        <Input
+          label="Email"
+          name="email"
+          value={loginInfo.email}
+          handleChange={handleChange}
+          errors={errors}
+        />
+
+        <Input
+          label="Senha"
+          type="password"
+          name="password"
+          value={loginInfo.password}
+          handleChange={handleChange}
+          errors={errors}
+        />
         <div className="flex flex-col items-center gap-2">
           <button
             disabled={loading}
