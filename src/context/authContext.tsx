@@ -46,13 +46,14 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
   const register = async (register: ILogin) => {
     try {
-      const { data } = await api.post("user/create", register);
+      const { data } = await api.post("auth/register", register);
       setCookie("TaskManager.token", data.token, {
         expires: new Date(Date.now() + 86400000),
         path: "/",
       });
       api.defaults.headers.Authorization = `Bearer ${data.token}`;
       await claimToken();
+      toast.success("Cadastro realizado com sucesso!");
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.message === "Network Error") {

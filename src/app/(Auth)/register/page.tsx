@@ -30,6 +30,7 @@ export default function Register() {
         password: registerInfo.password,
       });
       setLoading(false);
+      router.push("/");
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         setErrors(validateErrorsYup(error));
