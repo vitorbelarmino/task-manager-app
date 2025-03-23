@@ -6,3 +6,9 @@ export interface ITask {
   createdAt: string;
   userId: string;
 }
+
+export interface ICreateTask {
+  userId: string;
+  title: string;
+  description: string;
+}

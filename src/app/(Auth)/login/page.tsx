@@ -6,8 +6,8 @@ import { validateErrorsYup } from "@/utils/validateErrorsYup";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import * as Yup from "yup";
-import { Loading } from "../../components/Loading";
-import { Input } from "@/app/components/Input";
+import { Loading } from "../../components/UI/Loading";
+import { Input } from "@/app/components/UI/Input";
 
 export default function Login() {
   const { login } = Auth();
@@ -24,10 +24,9 @@ export default function Login() {
       setLoading(true);
       await loginSchema.validate(loginInfo, { abortEarly: false });
       setErrors({});
-      const loginSuccess = await login(loginInfo);
-      if (loginSuccess) {
-        router.push("/");
-      }
+      await login(loginInfo);
+      setLoading(false);
+      router.push("/");
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         setErrors(validateErrorsYup(error));
@@ -63,7 +62,7 @@ export default function Login() {
           <button
             disabled={loading}
             onClick={onSubmit}
-            className="bg-blue-500 p-2 w-full rounded-md disabled:bg-gray-400"
+            className="bg-blue-500 p-2 w-full rounded-md disabled:bg-gray-400 text-white cursor-pointer"
           >
             {!loading ? "Entrar" : <Loading size={25} />}
           </button>

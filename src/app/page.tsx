@@ -1,15 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Table } from "./components/Table";
+import { Table } from "./components/shared/tables/Table";
 import { Auth } from "@/context/authContext";
 import { ITask } from "@/interface/ITask";
 import { deleteTaskByid, getTaskByUser } from "@/api/task";
-import { Loading } from "./components/Loading";
+import { Loading } from "./components/UI/Loading";
+import { TaskModal } from "./components/shared/modals/TaskModal";
 
 export default function Home() {
   const { userId } = Auth();
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   const getTasks = async (user_id: string) => {
     const data = await getTaskByUser(user_id);
@@ -46,8 +48,15 @@ export default function Home() {
           <Loading size={60} />
         </div>
       ) : (
-        <Table data={tasks} title="Tarefas" deleteTask={deleteTask} />
+        <Table data={tasks} title="Tarefas" deleteTask={deleteTask} setOpenModal={setOpenModal} />
       )}
+      <TaskModal
+        open={openModal}
+        setOpen={setOpenModal}
+        tasks={tasks}
+        setTasks={setTasks}
+        userId={userId}
+      />
     </div>
   );
 }

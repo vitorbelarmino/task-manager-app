@@ -8,8 +8,8 @@ import { toast } from "react-toastify";
 import { usePathname, useRouter } from "next/navigation";
 
 type AuthContextType = {
-  login: (login: ILogin) => Promise<boolean>;
-  register: (register: ILogin) => Promise<boolean>;
+  login: (login: ILogin) => Promise<void>;
+  register: (register: ILogin) => Promise<void>;
   userId: string;
 };
 export const AuthContext = createContext({} as AuthContextType);
@@ -26,20 +26,19 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       setCookie("TaskManager.token", data.token, {
         expires: new Date(Date.now() + 86400000),
       });
-      return true;
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.data.error) {
           toast.error("Email ou senha incorretos!");
-          return false;
+          throw new Error(error.message);
         }
         if (error.message === "Network Error") {
           toast.error("Backend fora do ar! Por favor entre em contato");
-          return false;
+          throw new Error(error.message);
         }
         toast.error("Algo deu errado! Error inesperado!");
       }
-      return false;
+      throw new Error("Erro de autenticação");
     }
   };
 
@@ -52,20 +51,19 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       });
       api.defaults.headers.Authorization = `Bearer ${data.token}`;
       await claimToken();
-      return true;
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.message === "Network Error") {
           toast.error("Backend fora do ar! Por favor entre em contato");
-          return false;
+          throw new Error("Backend fora do ar! Por favor entre em contato");
         }
         if (error.status === 409) {
           toast.error("Email já cadastrado!");
-          return false;
+          throw new Error("Email já cadastrado!");
         }
         toast.error("Algo deu errado! Error inesperado!");
+        throw new Error(error.message);
       }
-      return false;
     }
   };
 

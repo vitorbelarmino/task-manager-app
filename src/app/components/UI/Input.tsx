@@ -9,7 +9,7 @@ type InputProps = {
 
 export function Input({ label, type, name, value, handleChange, errors }: InputProps) {
   return (
-    <label className={`${errors?.[name] ? "pb-0" : "pb-6"}`}>
+    <label className={`${errors?.[name] ? "pb-0" : "pb-6"} flex flex-col w-full`}>
       {label}
       <input
         type={type || "text"}
