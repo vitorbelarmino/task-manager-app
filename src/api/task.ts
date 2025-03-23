@@ -1,4 +1,4 @@
-import { ICreateTask } from "@/interface/ITask";
+import { ICreateTask, IUpdateTask } from "@/interface/ITask";
 import { api } from ".";
 
 export async function getTaskByUser(userId: string) {
@@ -27,5 +27,18 @@ export async function createTask(task: ICreateTask) {
   } catch (error) {
     console.error(error);
     throw new Error("Error ao criar tarefa");
+  }
+}
+
+export async function updateTask(task: IUpdateTask) {
+  try {
+    const { data } = await api.put(`/task/update/${task.id}`, {
+      title: task.title,
+      description: task.description,
+      status: task.status,
+    });
+    return data;
+  } catch (error) {
+    throw new Error("Error ao atualizar tarefa");
   }
 }

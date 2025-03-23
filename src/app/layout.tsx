@@ -4,6 +4,7 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "@/context/authContext";
+import TaskProvider from "@/context/taskContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,8 +30,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
-          <ToastContainer hideProgressBar={true} autoClose={2500} />
-          {children}
+          <TaskProvider>
+            <ToastContainer hideProgressBar={true} autoClose={2500} />
+            {children}
+          </TaskProvider>
         </AuthProvider>
       </body>
     </html>
