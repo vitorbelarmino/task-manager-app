@@ -26,6 +26,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       setCookie("TaskManager.token", data.token, {
         expires: new Date(Date.now() + 86400000),
       });
+      api.defaults.headers.Authorization = `Bearer ${data.token}`;
+      await claimToken();
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response?.data.error) {
@@ -70,12 +72,20 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const claimToken = async () => {
     try {
       const { data } = await api.get("auth/claim");
-      setUserId(data.id);
+      setUserId(data.userId);
     } catch (error) {
-      deleteCookie("TaskManager.token");
-      router.push("/login");
-      console.error(error);
-      throw new Error("Erro de autenticação");
+      if (error instanceof AxiosError) {
+        if (error.status === 401 || error.status === 404) {
+          deleteCookie("TaskManager.token");
+          router.push("/login");
+          throw new Error("Erro de Autenticação");
+        }
+        if (error.message === "Network Error") {
+          toast.error("Backend fora do ar! Por favor entre em contato");
+          throw new Error(error.message);
+        }
+        toast.error("Algo deu errado! Error inesperado!");
+      }
     }
   };
 

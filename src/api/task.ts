@@ -7,7 +7,7 @@ export async function getTaskByUser(userId: string) {
     return data;
   } catch (error) {
     console.error(error);
-    return error;
+    throw new Error("Error ao buscar tarefas");
   }
 }
 
