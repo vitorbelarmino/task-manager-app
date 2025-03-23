@@ -8,22 +8,22 @@ import { createTaskSchema } from "@/schema/ITaskSchema";
 import { createTask } from "@/api/task";
 import { AxiosError } from "axios";
 import { validateErrorsYup } from "@/utils/validateErrorsYup";
-import { formatDateBR } from "@/utils/date";
+import { taskContext } from "@/context/taskContext";
+import { Auth } from "@/context/authContext";
 
 interface TaskModalProps {
   open: boolean;
   setOpen: (value: boolean) => void;
-  userId: string;
-  tasks: ITask[];
-  setTasks: (value: ITask[]) => void;
 }
 
-export function TaskModal({ open, setOpen, userId, tasks, setTasks }: TaskModalProps) {
+export function CreateTaskModal({ open, setOpen }: TaskModalProps) {
   if (!open) return null;
+  const { userId } = Auth();
+  const { tasks, setTasks } = taskContext();
   const [TaskInfo, setTaskInfo] = React.useState<ICreateTask>({
-    userId,
     title: "",
     description: "",
+    userId,
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
@@ -38,14 +38,11 @@ export function TaskModal({ open, setOpen, userId, tasks, setTasks }: TaskModalP
     setLoading(true);
     try {
       await createTaskSchema.validate(TaskInfo, { abortEarly: false });
-      const newTask = await createTask(TaskInfo);
-      setTasks([
-        ...tasks,
-        {
-          ...newTask,
-          createdAt: formatDateBR(newTask.createdAt),
-        },
-      ]);
+      const newTask = await createTask({
+        ...TaskInfo,
+        userId,
+      });
+      setTasks([...tasks, newTask]);
       toast.success("Task criada com sucesso");
       setErrors({});
       setLoading(false);
@@ -93,14 +90,14 @@ export function TaskModal({ open, setOpen, userId, tasks, setTasks }: TaskModalP
         <div className="flex justify-end p-4 gap-2 px-8 pt-0">
           <button
             onClick={() => setOpen(false)}
-            className="w-full px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+            className="w-full px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 cursor-pointer"
           >
             Cancelar
           </button>
           <button
             onClick={onSubmit}
             disabled={loading}
-            className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
           >
             {loading ? (
               <div className="flex justify-center w-full">
