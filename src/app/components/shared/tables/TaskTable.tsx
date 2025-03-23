@@ -1,5 +1,7 @@
 "use client";
+import { ITask } from "@/interface/ITask";
 import { cn } from "@/utils/shared";
+import { useEffect, useState } from "react";
 import { MdOutlineEdit } from "react-icons/md";
 import { RiCloseLargeLine } from "react-icons/ri";
 
@@ -9,11 +11,10 @@ interface Idata {
   description: string;
   status: string;
   createdAt: string;
-  userId: string;
 }
 
 interface TableProps {
-  data: Idata[];
+  data: ITask[];
   title: string;
   deleteTask: (id: string) => void;
   setOpenModal: (value: boolean) => void;
@@ -21,9 +22,20 @@ interface TableProps {
 
 export function Table({ data, title, deleteTask, setOpenModal }: TableProps) {
   const columns = ["Título", "Descrição", "Status", "Data de criação", "Editar/Excluir"];
+  const [tasks, setTasks] = useState<Idata[]>([]);
 
   const colSpanTHead = (key: string) => (key === "Título" || key === "Descrição" ? 3 : 1);
   const colSpanTBody = (key: string) => (key === "title" || key === "description" ? 3 : 1);
+  useEffect(() => {
+    const formatedTasks = data.map((task: ITask) => ({
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      createdAt: task.createdAt,
+      id: task.id,
+    }));
+    setTasks(formatedTasks);
+  }, [data]);
 
   return (
     <div className="flex justify-center w-full mt-5">
@@ -55,7 +67,7 @@ export function Table({ data, title, deleteTask, setOpenModal }: TableProps) {
               </tr>
             </thead>
             <tbody>
-              {data.map((task, rowIndex) => (
+              {tasks.map((task, rowIndex) => (
                 <tr key={rowIndex}>
                   {Object.entries(task)
                     .filter(([key]) => key !== "id")

@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Table } from "./components/shared/tables/Table";
+import { Table } from "./components/shared/tables/TaskTable";
 import { Auth } from "@/context/authContext";
 import { ITask } from "@/interface/ITask";
 import { deleteTaskByid, getTaskByUser } from "@/api/task";
 import { Loading } from "./components/UI/Loading";
 import { TaskModal } from "./components/shared/modals/TaskModal";
+import { formatDateBR } from "@/utils/date";
 
 export default function Home() {
   const { userId } = Auth();
@@ -19,7 +20,7 @@ export default function Home() {
       title: task.title,
       description: task.description,
       status: task.status,
-      createdAt: new Intl.DateTimeFormat("pt-BR").format(new Date(task.createdAt)),
+      createdAt: formatDateBR(task.createdAt),
       id: task.id,
     }));
     setTasks(formatedTasks);

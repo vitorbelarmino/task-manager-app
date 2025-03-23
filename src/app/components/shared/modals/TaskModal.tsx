@@ -5,9 +5,10 @@ import { toast } from "react-toastify";
 import { Loading } from "../../UI/Loading";
 import { ICreateTask, ITask } from "@/interface/ITask";
 import { createTaskSchema } from "@/schema/ITaskSchema";
-import { createTask, getTaskByUser } from "@/api/task";
+import { createTask } from "@/api/task";
 import { AxiosError } from "axios";
 import { validateErrorsYup } from "@/utils/validateErrorsYup";
+import { formatDateBR } from "@/utils/date";
 
 interface TaskModalProps {
   open: boolean;
@@ -37,9 +38,14 @@ export function TaskModal({ open, setOpen, userId, tasks, setTasks }: TaskModalP
     setLoading(true);
     try {
       await createTaskSchema.validate(TaskInfo, { abortEarly: false });
-      await createTask(TaskInfo);
-      const allTasks = await getTaskByUser(userId);
-      setTasks(allTasks);
+      const newTask = await createTask(TaskInfo);
+      setTasks([
+        ...tasks,
+        {
+          ...newTask,
+          createdAt: formatDateBR(newTask.createdAt),
+        },
+      ]);
       toast.success("Task criada com sucesso");
       setErrors({});
       setLoading(false);
