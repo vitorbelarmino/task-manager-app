@@ -3,7 +3,7 @@ import { Input } from "../../UI/Input";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { Loading } from "../../UI/Loading";
-import { ICreateTask } from "@/interface/ITask";
+import { ICreateTask, ITask } from "@/interface/ITask";
 import { createTaskSchema } from "@/schema/ITaskSchema";
 import { createTask } from "@/api/task";
 import { AxiosError } from "axios";
@@ -19,7 +19,7 @@ interface TaskModalProps {
 export function CreateTaskModal({ open, setOpen }: TaskModalProps) {
   if (!open) return null;
   const { userId } = Auth();
-  const { tasks, setTasks } = taskContext();
+  const { setSortedTasks, sortedTasks, setSortConfig } = taskContext();
   const [TaskInfo, setTaskInfo] = React.useState<ICreateTask>({
     title: "",
     description: "",
@@ -38,12 +38,14 @@ export function CreateTaskModal({ open, setOpen }: TaskModalProps) {
     setLoading(true);
     try {
       await createTaskSchema.validate(TaskInfo, { abortEarly: false });
-      const newTask = await createTask({
+      const newTask: ITask = await createTask({
         ...TaskInfo,
         userId,
       });
-      setTasks([...tasks, newTask]);
+      setSortedTasks([...sortedTasks, newTask]);
       toast.success("Task criada com sucesso");
+      setSortConfig({ column: undefined, direction: undefined });
+
       setErrors({});
       setLoading(false);
       setOpen(false);

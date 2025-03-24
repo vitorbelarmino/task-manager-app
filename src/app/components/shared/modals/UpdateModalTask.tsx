@@ -20,7 +20,7 @@ interface TaskModalProps {
 
 export function UpdateModalTask({ open, setOpen, task }: TaskModalProps) {
   if (!open || !task) return null;
-  const { getTasks } = taskContext();
+  const { getTasks, setSortConfig } = taskContext();
   const { userId } = Auth();
   const [TaskInfo, setTaskInfo] = React.useState<IUpdateTask>({
     id: task.id,
@@ -44,6 +44,7 @@ export function UpdateModalTask({ open, setOpen, task }: TaskModalProps) {
       await updateTaskSchema.validate(TaskInfo, { abortEarly: false });
       await updateTask(TaskInfo);
       getTasks();
+      setSortConfig({ column: undefined, direction: undefined });
       toast.success("Tarefa alterada com sucesso");
       setErrors({});
       setLoading(false);

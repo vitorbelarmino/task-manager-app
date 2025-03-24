@@ -31,7 +31,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       await claimToken();
     } catch (error) {
       if (error instanceof AxiosError) {
-        if (error.response?.data.error) {
+        if (error.response?.status === 401 || error.response?.status === 404) {
           toast.error("Email ou senha incorretos!");
           throw new Error(error.message);
         }
@@ -39,7 +39,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
           toast.error("Backend fora do ar! Por favor entre em contato");
           throw new Error(error.message);
         }
-        toast.error("Algo deu errado! Error inesperado!");
+        toast.error("Algo deu errado! Error Interno!");
+        throw new Error(error.message);
       }
       throw new Error("Erro de autenticação");
     }
@@ -84,9 +85,14 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         }
         if (error.message === "Network Error") {
           toast.error("Backend fora do ar! Por favor entre em contato");
+          deleteCookie("TaskManager.token");
+          router.push("/login");
           throw new Error(error.message);
         }
         toast.error("Algo deu errado! Error inesperado!");
+        deleteCookie("TaskManager.token");
+        router.push("/login");
+        throw new Error(error.message);
       }
     }
   };
