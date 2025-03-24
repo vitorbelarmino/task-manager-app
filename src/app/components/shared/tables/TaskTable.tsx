@@ -103,38 +103,46 @@ export function TaskTable() {
                 </tr>
               </thead>
               <tbody>
-                {sortedTasks.map((task, index) => (
-                  <tr key={index} className="border-b border-gray-300 even:bg-gray-200">
-                    <td className="p-2" colSpan={colSpanMap.title}>
-                      {task.title}
-                    </td>
-                    <td className="p-2" colSpan={colSpanMap.description}>
-                      {task.description}
-                    </td>
-                    <td className="p-2 text-center" colSpan={colSpanMap.status}>
-                      <span
-                        className={`px-3 py-1 rounded-full text-white ${task.status === "Concluído" ? "bg-green-500" : "bg-yellow-500"}`}
-                      >
-                        {task.status}
-                      </span>
-                    </td>
-                    <td className="p-2 text-center" colSpan={colSpanMap.createdAt}>
-                      {formatDateBR(task.createdAt)}
-                    </td>
-                    <td className="p-2 text-center w-5" colSpan={colSpanMap.actions}>
-                      <div className="flex gap-3 justify-center items-center">
-                        <MdOutlineEdit
-                          className="cursor-pointer text-blue-500 hover:text-blue-700 transition hover:scale-105"
-                          onClick={() => activeUpdateModal(task)}
-                        />
-                        <RiCloseLargeLine
-                          className="cursor-pointer text-red-500 hover:text-red-700 transition hover:scale-105"
-                          onClick={() => deleteTask(task.id)}
-                        />
-                      </div>
+                {sortedTasks.length !== 0 ? (
+                  sortedTasks.map((task, index) => (
+                    <tr key={index} className="border-b border-gray-300 even:bg-gray-200">
+                      <td className="p-2" colSpan={colSpanMap.title}>
+                        {task.title}
+                      </td>
+                      <td className="p-2" colSpan={colSpanMap.description}>
+                        {task.description}
+                      </td>
+                      <td className="p-2 text-center" colSpan={colSpanMap.status}>
+                        <span
+                          className={`px-3 py-1 rounded-full text-white ${task.status === "Concluído" ? "bg-green-500" : "bg-yellow-500"}`}
+                        >
+                          {task.status}
+                        </span>
+                      </td>
+                      <td className="p-2 text-center" colSpan={colSpanMap.createdAt}>
+                        {formatDateBR(task.createdAt)}
+                      </td>
+                      <td className="p-2 text-center w-5" colSpan={colSpanMap.actions}>
+                        <div className="flex gap-3 justify-center items-center">
+                          <MdOutlineEdit
+                            className="cursor-pointer text-blue-500 hover:text-blue-700 transition hover:scale-105"
+                            onClick={() => activeUpdateModal(task)}
+                          />
+                          <RiCloseLargeLine
+                            className="cursor-pointer text-red-500 hover:text-red-700 transition hover:scale-105"
+                            onClick={() => deleteTask(task.id)}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={8} className="text-center p-4">
+                      Nenhuma tarefa encontrada
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
