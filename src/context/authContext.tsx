@@ -10,6 +10,7 @@ import { usePathname, useRouter } from "next/navigation";
 type AuthContextType = {
   login: (login: ILogin) => Promise<void>;
   register: (register: ILogin) => Promise<void>;
+  logout: () => void;
   userId: string;
 };
 export const AuthContext = createContext({} as AuthContextType);
@@ -90,6 +91,11 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     }
   };
 
+  const logout = () => {
+    deleteCookie("TaskManager.token");
+    router.push("/login");
+  };
+
   useEffect(() => {
     if (pathname !== "/login" && pathname !== "/register") {
       claimToken();
@@ -97,6 +103,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ login, register, userId }}> {children} </AuthContext.Provider>
+    <AuthContext.Provider value={{ login, register, logout, userId }}>
+      {children}
+    </AuthContext.Provider>
   );
 }

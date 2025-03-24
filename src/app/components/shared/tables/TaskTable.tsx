@@ -10,9 +10,12 @@ import { UpdateModalTask } from "../modals/UpdateModalTask";
 import { deleteTaskByid } from "@/api/task";
 import { CreateTaskModal } from "../modals/CreateTaskModal";
 import { FaPlus } from "react-icons/fa";
+import { LuLogOut } from "react-icons/lu";
+import { Auth } from "@/context/authContext";
 
 export function TaskTable() {
   const { tasks, getTasks } = taskContext();
+  const { logout } = Auth();
 
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
@@ -60,6 +63,16 @@ export function TaskTable() {
             <div className="flex items-center gap-2">
               <FaPlus />
               Adicionar tarefa
+            </div>
+          </button>
+
+          <button
+            className="text-white bg-red-600 rounded-md py-3 px-5 m-2 hover:bg-red-700 transition cursor-pointer"
+            onClick={logout}
+          >
+            <div className="flex items-center gap-2">
+              <LuLogOut />
+              Sair
             </div>
           </button>
         </div>
