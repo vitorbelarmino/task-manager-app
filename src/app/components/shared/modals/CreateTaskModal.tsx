@@ -3,7 +3,7 @@ import { Input } from "../../UI/Input";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { Loading } from "../../UI/Loading";
-import { ICreateTask, ITask } from "@/interface/ITask";
+import { ICreateTask } from "@/interface/ITask";
 import { createTaskSchema } from "@/schema/ITaskSchema";
 import { createTask } from "@/api/task";
 import { AxiosError } from "axios";

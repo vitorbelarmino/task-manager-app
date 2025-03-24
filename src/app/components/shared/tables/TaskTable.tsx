@@ -1,6 +1,6 @@
 "use client";
 import { taskContext } from "@/context/taskContext";
-import { ITaskTable } from "@/interface/ITask";
+import { ITask, ITaskTable } from "@/interface/ITask";
 import { formatDateBR } from "@/utils/date";
 import { cn } from "@/utils/shared";
 import { useState } from "react";
@@ -12,9 +12,10 @@ import { CreateTaskModal } from "../modals/CreateTaskModal";
 import { FaPlus } from "react-icons/fa";
 import { LuLogOut } from "react-icons/lu";
 import { Auth } from "@/context/authContext";
+import { TaskSortArrows } from "../TaskSortArrows";
 
 export function TaskTable() {
-  const { tasks, getTasks } = taskContext();
+  const { sortedTasks, getTasks } = taskContext();
   const { logout } = Auth();
 
   const [openCreateModal, setOpenCreateModal] = useState(false);
@@ -83,21 +84,26 @@ export function TaskTable() {
               <thead className="bg-blue-500 text-white sticky top-0 z-10 m-2">
                 <tr>
                   {columns.map((col, index) => (
-                    <th
-                      key={index}
-                      colSpan={col.colSpan}
-                      className={cn(
-                        !["title", "description"].includes(col.key) ? "text-center" : "text-start",
-                        "p-2",
-                      )}
-                    >
-                      {col.value}
+                    <th key={index} colSpan={col.colSpan}>
+                      <div
+                        className={cn(
+                          !["title", "description"].includes(col.key)
+                            ? "justify-center"
+                            : "justify-start",
+                          "p-2 flex items-center gap-2",
+                        )}
+                      >
+                        {col.value}
+                        {col.key !== "actions" && (
+                          <TaskSortArrows column={col.key as keyof ITask} />
+                        )}
+                      </div>
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {tasks.map((task, index) => (
+                {sortedTasks.map((task, index) => (
                   <tr key={index} className="border-b border-gray-300 even:bg-gray-200">
                     <td className="p-2" colSpan={colSpanMap.title}>
                       {task.title}
