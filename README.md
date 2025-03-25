@@ -7,16 +7,37 @@ Este projeto é um aplicativo Full Stack de gerenciamento de tarefas desenvolvid
 O projeto conta com um **back-end** desenvolvido em Next.js, disponível no repositório:
 🔗 [Task Manager Server](https://github.com/vitorbelarmino/task-manager-server)
 
-## 🚀 Tecnologias
+## 🚀 Funcionalidades Principais
 
-Este projeto foi desenvolvido com as seguintes tecnologias:
+- **CRUD de Tarefas**:
+  - Criar, visualizar, editar e excluir tarefas.
+  - Marcar tarefas como concluídas.
+  - Validação de campos obrigatórios.
+  
+- **Filtros**:
+  - Filtrar tarefas por status (Todas, Pendentes, Concluídas).
 
-- **[React](https://react.dev/)**
-- **[Next.js](https://nextjs.org/)**
-- **[TypeScript](https://www.typescriptlang.org/)**
-- **[Tailwind CSS](https://tailwindcss.com/)**
-- **[Eslint](https://eslint.org/)**
-- **[Prettier](https://prettier.io/)**
+- **Ordenação**:
+  - Ordenar tarefas por Titulo, Descrição, Status ou Data de criação, em ordem crescente ou decrecente.
+
+- **Autenticação**:
+  - Utilizando os cookies para armazenar o token para autenticação do usuário.
+
+- **Feedback Visual**:
+  - Notificações toast para ações do usuário.
+  - Animações e transições suaves.
+
+## 🛠️ Tecnologias Utilizadas
+
+
+  - React.js
+  - Next.js
+  - TypeScript
+  - Tailwind
+  - Eslint
+  - Prettier
+  - Yup
+
 
 ## ⬇️ Como executar o projeto
 
