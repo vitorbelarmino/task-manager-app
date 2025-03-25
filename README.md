@@ -7,6 +7,8 @@ Este projeto é um aplicativo Full Stack de gerenciamento de tarefas desenvolvid
 O projeto conta com um **back-end** desenvolvido em Next.js, disponível no repositório:
 🔗 [Task Manager Server](https://github.com/vitorbelarmino/task-manager-server)
 
+Você pode acessar o debloy da aplicação [aqui](https://task-manager-app-rouge-chi.vercel.app/login)
+
 ## 🚀 Funcionalidades Principais
 
 - **CRUD de Tarefas**:
