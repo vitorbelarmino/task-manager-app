@@ -19,7 +19,7 @@ interface TaskModalProps {
 export function CreateTaskModal({ open, setOpen }: TaskModalProps) {
   if (!open) return null;
   const { userId } = Auth();
-  const { setSortedTasks, sortedTasks, setSortConfig } = taskContext();
+  const { setSortConfig, getTasks } = taskContext();
   const [TaskInfo, setTaskInfo] = React.useState<ICreateTask>({
     title: "",
     description: "",
@@ -42,7 +42,7 @@ export function CreateTaskModal({ open, setOpen }: TaskModalProps) {
         ...TaskInfo,
         userId,
       });
-      setSortedTasks([...sortedTasks, newTask]);
+      getTasks();
       toast.success("Task criada com sucesso");
       setSortConfig({ column: undefined, direction: undefined });
 
